@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance " xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+    <display-name>web</display-name>
+    <welcome-file-list>
+        <welcome-file>login.html</welcome-file>
+    </welcome-file-list>
+
+    <!-- log4j properties -->
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>
+            classpath:log4j.properties
+        </param-value>
+    </context-param>
+
+    <!-- system config file -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:AppConfig.xml
+        </param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+    
+    <!-- LazyInitializationException when binding data with view layer in multi layers.Ignoring it when using tech like DTOS.
+        link http://stackoverflow.com/questions/1538222/why-not-to-use-springs-openentitymanagerinviewfilter -->
+    <!-- <filter>  
+        <filter-name>openEntityManagerInViewFilter</filter-name>  
+        <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>  
+    </filter>  
+    <filter-mapping>  
+        <filter-name>openEntityManagerInViewFilter</filter-name>  
+        <url-pattern>/*</url-pattern>  
+    </filter-mapping> -->
+
+    <!-- spring servlet setting -->
+    <servlet>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>configuration</param-name>
+            <param-value>/WEB-INF/spring/dispatcher-config.xml</param-value>
+        </init-param>
+    </servlet>
+    
+    <!-- request encoding setting -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    
+</web-app>

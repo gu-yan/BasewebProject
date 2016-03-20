@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>cn.gy.test</groupId>
+  <artifactId>springbase</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>SpringBaseParent</name>
+  <description>springbase</description>
+  
+    <build>  
+	    <plugins>  
+	      <plugin>  
+	        <groupId>org.apache.maven.plugins</groupId>  
+	        <artifactId>maven-compiler-plugin</artifactId>  
+	        <configuration>  
+	          <source>${java.version}</source>  
+	          <target>${java.version}</target>  
+	        </configuration>  
+	      </plugin>  
+	    </plugins>  
+    </build>
+
+
+	<properties>
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+	    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>  
+	    <!-- 编译时的编码 -->  
+	    <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+	    <java.version>1.8</java.version>
+	    
+	    <!-- config all version -->
+	    <earpluginversion>2.10.1</earpluginversion>
+	    
+        <springframe.version>4.2.5.RELEASE</springframe.version>
+        <javax-servlet.version>3.1.0</javax-servlet.version>
+        <jackson-core.version>2.7.2</jackson-core.version>
+        <hibernate-entitymanager.version>5.1.0.Final</hibernate-entitymanager.version>
+        <spring-data-jpa.version>1.9.1.RELEASE</spring-data-jpa.version>
+        <commons.lang.version>3.4</commons.lang.version>
+	</properties>
+	
+	<modules>
+		<module>configs</module>
+		<module>web</module>
+		<module>ear</module>
+	</modules>
+</project>

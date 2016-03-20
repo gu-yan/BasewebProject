@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>cn.gy.test</groupId>
+    <artifactId>springbase</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>ear</artifactId>
+  <name>ear</name>
+  <packaging>ear</packaging>
+  <description>ear</description>
+
+  <dependencies>
+    <dependency>
+        <groupId>cn.gy.test</groupId>
+        <artifactId>web</artifactId>
+        <type>war</type>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+      
+  <build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-ear-plugin</artifactId>
+            <version>${earpluginversion}</version>
+            
+            <configuration>
+                <version>7</version>
+                <modules>
+                    <webModule>
+				        <groupId>cn.gy.test</groupId>
+				        <artifactId>web</artifactId>
+				        <contextRoot>app1</contextRoot>
+				        <bundleFileName>app1.war</bundleFileName>
+                    </webModule>
+                </modules>
+            </configuration>
+        </plugin>
+    </plugins>
+  </build>
+</project>
