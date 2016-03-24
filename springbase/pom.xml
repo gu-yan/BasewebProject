@@ -37,6 +37,9 @@
         <hibernate-entitymanager.version>5.1.0.Final</hibernate-entitymanager.version>
         <spring-data-jpa.version>1.9.1.RELEASE</spring-data-jpa.version>
         <commons.lang.version>3.4</commons.lang.version>
+        <slf4j.version>1.7.18</slf4j.version>
+        <logback.classic.version>1.1.6</logback.classic.version>
+        <logback.spring.version>0.1.4</logback.spring.version>
 	</properties>
 	
 	<modules>

@@ -14,12 +14,26 @@
 	    <groupId>org.springframework</groupId>
 	    <artifactId>spring-webmvc</artifactId>
 	    <version>${springframe.version}</version>
-	</dependency>
+    </dependency>
 	<dependency>
         <groupId>org.springframework.data</groupId>
         <artifactId>spring-data-jpa</artifactId>
         <version>${spring-data-jpa.version}</version>
-    </dependency>
+        <exclusions>
+        	<exclusion>
+        		<artifactId>spring-aop</artifactId>
+        		<groupId>org.springframework</groupId>
+        	</exclusion>
+        	<exclusion>
+        		<artifactId>slf4j-api</artifactId>
+        		<groupId>org.slf4j</groupId>
+        	</exclusion>
+        	<exclusion>
+        		<artifactId>jcl-over-slf4j</artifactId>
+        		<groupId>org.slf4j</groupId>
+        	</exclusion>
+        </exclusions>
+	</dependency>
 	<dependency>  
         <groupId>org.springframework</groupId>  
         <artifactId>spring-tx</artifactId>  
@@ -60,5 +74,24 @@
         <artifactId>jackson-annotations</artifactId>
         <version>${jackson-core.version}</version>
     </dependency>
+    
+    <!-- slf4j + logback -->
+    <dependency>
+		<groupId>ch.qos.logback</groupId>
+		<artifactId>logback-classic</artifactId>
+		<version>${logback.classic.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.logback-extensions</groupId>
+		<artifactId>logback-ext-spring</artifactId>
+		<version>${logback.spring.version}</version>
+	</dependency>
+	   <dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>jcl-over-slf4j</artifactId>
+		<version>${slf4j.version}</version>
+	</dependency>
+    
+    
   </dependencies>
 </project>
