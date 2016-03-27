@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import cn.gy.test.configs.constants.ConstantObj;
+import cn.gy.test.configs.constants.ConstantBasic;
 
 /**
  * load multiple property files <br>
- * Files relative path defined at {@link cn.gy.test.configs.constants.ConstantObj.CONFIG_FILE} <br>
- * Read files by prefix path {@link cn.gy.test.configs.constants.ConstantObj.userDir} + relative path
+ * Files relative path defined at {@link cn.gy.test.configs.constants.ConstantBasic.CONFIG_FILE} <br>
+ * Read files by prefix path {@link cn.gy.test.configs.constants.ConstantBasic.userDir} + relative path
  * @author guyan
  * 2016年3月20日
  */
@@ -26,7 +26,7 @@ public class ConfigFileUtils {
 
 	static {
 		try {
-			String[] files = ConstantObj.CONFIG_FILE;
+			String[] files = ConstantBasic.CONFIG_FILE;
 			init(files);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -38,7 +38,7 @@ public class ConfigFileUtils {
 			String filePath = files[i].trim();
 			if (filePath.length() > 0) {
 				Properties properties = IOUtils.
-						getPropertiesFromFile(ConstantObj.userDir + File.separator + filePath,DEFAULT_ENCODING);
+						getPropertiesFromFile(ConstantBasic.userDir + File.separator + filePath,DEFAULT_ENCODING);
 				if (null != properties) {
 					propertiesMap.put(filePath, properties);
 				}

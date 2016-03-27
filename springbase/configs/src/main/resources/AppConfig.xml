@@ -20,9 +20,6 @@
     <!-- insert aspectj aop -->
     <aop:aspectj-autoproxy proxy-target-class="true" />
     
-    <context:component-scan base-package="cn.gy.test">
-        <context:exclude-filter type="regex" expression="cn.gy.test.configs.*"/>
-        <context:exclude-filter type="regex" expression="cn.gy.test.web.initializer.*"/>
-    </context:component-scan>
+    <context:component-scan base-package="cn.gy.test" />
 
 </beans>
