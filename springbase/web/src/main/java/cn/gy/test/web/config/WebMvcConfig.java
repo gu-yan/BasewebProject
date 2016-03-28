@@ -44,7 +44,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter{
 	@Bean
     public CommonsMultipartResolver multipartResolver() {
 		CommonsMultipartResolver mpartResolver = new CommonsMultipartResolver();
-		mpartResolver.setDefaultEncoding(ConstantBasic.CONFIG_FILE_ENCODING);
+		mpartResolver.setDefaultEncoding(ConstantBasic.CONFIG_ENCODING);
 		return mpartResolver;
     }
 	
