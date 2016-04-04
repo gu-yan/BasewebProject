@@ -19,7 +19,7 @@ import cn.gy.test.configs.constants.ConstantBasic;
 @Configuration
 @EnableWebMvc
 @EnableAsync
-@ComponentScan(basePackages = {"cn.gy.test.web.resources"})
+@ComponentScan(basePackages = {"cn.gy.test.web.controller"})
 public class WebMvcConfig extends WebMvcConfigurerAdapter{
 
 	/**

@@ -2,29 +2,31 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xmlns:context="http://www.springframework.org/schema/context" 
+       xmlns:mvc="http://www.springframework.org/schema/mvc"  
        xmlns:ws="http://jax-ws.dev.java.net/spring/core"
        xmlns:wss="http://jax-ws.dev.java.net/spring/servlet"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-	        http://www.springframework.org/schema/beans/spring-beans.xsd
-	        http://www.springframework.org/schema/context
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       		http://www.springframework.org/schema/beans/spring-beans.xsd
+	        http://www.springframework.org/schema/context 
 	        http://www.springframework.org/schema/context/spring-context.xsd 
-	        http://jax-ws.dev.java.net/spring/core
+	        http://www.springframework.org/schema/mvc 
+	        http://www.springframework.org/schema/mvc/spring-mvc.xsd  
+	        http://jax-ws.dev.java.net/spring/core 
 	        http://jax-ws.dev.java.net/spring/core.xsd
-	        http://jax-ws.dev.java.net/spring/servlet
+	        http://jax-ws.dev.java.net/spring/servlet 
 	        http://jax-ws.dev.java.net/spring/servlet.xsd">
         
-    <mvc:annotation-driven />
-
-    <mvc:message-converters>
-        <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-            <constructor-arg value="UTF-8" index="0"/>
-            <property name="supportedMediaTypes">
-            	<list>
-            		<value>application/json;charset=UTF-8</value>
-            	</list>
-            </property>
-        </bean>
-    </mvc:message-converters>
+    <mvc:annotation-driven>
+	    <mvc:message-converters>
+	        <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+	            <property name="supportedMediaTypes">
+	            	<list>
+	            		<value>application/json;charset=UTF-8</value>
+	            	</list>
+	            </property>
+	        </bean>
+	    </mvc:message-converters>
+	</mvc:annotation-driven>
 
     <bean class="cn.gy.test.web.config.WebMvcConfig" />
     
