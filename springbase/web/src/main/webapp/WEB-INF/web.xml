@@ -28,17 +28,6 @@
     <listener>
         <listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
     </listener>
-    
-    <!-- LazyInitializationException when binding data with view layer in multi layers.Ignoring it when using tech like DTOS.
-        link http://stackoverflow.com/questions/1538222/why-not-to-use-springs-openentitymanagerinviewfilter -->
-    <!-- <filter>  
-        <filter-name>openEntityManagerInViewFilter</filter-name>  
-        <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>  
-    </filter>  
-    <filter-mapping>  
-        <filter-name>openEntityManagerInViewFilter</filter-name>  
-        <url-pattern>/*</url-pattern>  
-    </filter-mapping> -->
 
     <!-- spring servlet setting -->
     <servlet>
@@ -49,6 +38,11 @@
             <param-value>/WEB-INF/spring/dispatcher-config.xml</param-value>
         </init-param>
     </servlet>
+    
+    <servlet-mapping>
+		<servlet-name>dispatcherServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
     
     <!-- request encoding setting -->
     <filter>
