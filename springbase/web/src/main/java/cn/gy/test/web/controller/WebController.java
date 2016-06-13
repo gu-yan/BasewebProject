@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/web")
 public class WebController {
 
-	@RequestMapping(value = "/book", method = RequestMethod.GET)
-	public ResponseEntity<String> getBook() {
-		ResponseEntity<String> res = new ResponseEntity<String>("", HttpStatus.OK);
-		return res;
-	}
+    @RequestMapping(value = "/book", method = RequestMethod.GET)
+    public ResponseEntity<String> getBook() {
+        ResponseEntity<String> res = new ResponseEntity<String>("", HttpStatus.OK);
+        return res;
+    }
 }

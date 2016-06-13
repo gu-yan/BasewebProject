@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/")
 public class LoginController {
 
-	@RequestMapping(value = "/verifycode", method = RequestMethod.GET, produces = "image/jpg")
-	@ResponseBody
-	public byte[] getVerificationCode(HttpServletRequest request, HttpServletResponse response) {
-		
-		return null;
-	}
-	
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	@ResponseBody
-	public String login(HttpServletRequest request) {
-		
-		return "";
-	}
+    @RequestMapping(value = "/verifycode", method = RequestMethod.GET, produces = "image/jpg")
+    @ResponseBody
+    public byte[] getVerificationCode(HttpServletRequest request, HttpServletResponse response) {
+
+        return null;
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ResponseBody
+    public String login(HttpServletRequest request) {
+
+        return "";
+    }
 }

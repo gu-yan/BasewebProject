@@ -30,74 +30,87 @@ import java.util.concurrent.ThreadPoolExecutor.CallerRunsPolicy;
 @EnableTransactionManagement
 public class Persistent {
 
-	@Bean
-    public HibernateExceptionTranslator hibernateExceptionTranslator(){
+    @Bean
+    public HibernateExceptionTranslator hibernateExceptionTranslator() {
         return new HibernateExceptionTranslator();
     }
-	
-	/********************************basic db********************************************/
-	@Bean
-	@Qualifier(value = "basictx")
-	public PlatformTransactionManager transactionManager() {
-		EntityManagerFactory factory = entityManagerFactory().getObject();
-		return new JpaTransactionManager(factory);
-	}
-	
-	@Bean
+
+    /********************************
+     * basic db
+     ********************************************/
+    @Bean
+    @Qualifier(value = "basictx")
+    public PlatformTransactionManager transactionManager() {
+        EntityManagerFactory factory = entityManagerFactory().getObject();
+        return new JpaTransactionManager(factory);
+    }
+
+    @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean entityFactory = new LocalContainerEntityManagerFactoryBean();
         entityFactory.setDataSource(dataSource());
-        
+
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
-        jpaVendorAdapter.setGenerateDdl(Boolean.valueOf(ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "hibernate.generateddl")));
-        jpaVendorAdapter.setShowSql(Boolean.valueOf(ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "hibernate.showsql")));
-        
+        jpaVendorAdapter.setGenerateDdl(Boolean
+                .valueOf(ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "hibernate.generateddl")));
+        jpaVendorAdapter.setShowSql(
+                Boolean.valueOf(ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "hibernate.showsql")));
+
         entityFactory.setJpaVendorAdapter(jpaVendorAdapter);
-        entityFactory.setPackagesToScan(ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "scandomainpackage.basic"));
+        entityFactory.setPackagesToScan(
+                ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "scandomainpackage.basic"));
 
         Properties jpaProperties = new Properties();
-        jpaProperties.put("hibernate.dialect", ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "hibernate.dialect"));
-        jpaProperties.put("hibernate.format_sql", ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "hibernate.formatsql"));
-        jpaProperties.put("hibernate.hbm2ddl.auto", ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "hibernate.hbm2ddl.auto"));
+        jpaProperties.put("hibernate.dialect",
+                ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "hibernate.dialect"));
+        jpaProperties.put("hibernate.format_sql",
+                ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "hibernate.formatsql"));
+        jpaProperties.put("hibernate.hbm2ddl.auto",
+                ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "hibernate.hbm2ddl.auto"));
         entityFactory.setJpaProperties(jpaProperties);
-        
+
         entityFactory.afterPropertiesSet();
         entityFactory.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
         return entityFactory;
-     }
-	
+    }
+
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "datasource.driveclass"));
+        dataSource.setDriverClassName(
+                ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "datasource.driveclass"));
         dataSource.setUrl(ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "datasource.url"));
         dataSource.setUsername(ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "datasource.username"));
         dataSource.setPassword(ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "datasource.password"));
         return dataSource;
     }
-    
+
     @Bean
-	public JdbcTemplate jdbcTemplate(){
-		JdbcTemplate jt=new JdbcTemplate();
-		jt.setDataSource(dataSource());
-		return jt;
-	}
+    public JdbcTemplate jdbcTemplate() {
+        JdbcTemplate jt = new JdbcTemplate();
+        jt.setDataSource(dataSource());
+        return jt;
+    }
 
     /**
-     * thread pool 
+     * thread pool
+     * 
      * @return
      */
     @Bean
-    public ThreadPoolExecutor threadPoolforJms(){
-    	ThreadPoolExecutor threadPoolforJms =  new ThreadPoolExecutor(
-    			Integer.valueOf(ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "thread.pool.corePoolSize")), 
-    			Integer.valueOf(ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "thread.pool.maximumPoolSize")), 
-    			Long.valueOf(ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "thread.pool.keepAliveTime")), 
-    			TimeUnit.MINUTES, 
-    			new LinkedBlockingQueue<Runnable>(Integer.valueOf(ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "thread.pool.workQueue"))), 
-    			new DaemonThreadFactory(""), 
-    			new CallerRunsPolicy());
-    	
-    	return threadPoolforJms;
+    public ThreadPoolExecutor threadPoolforJms() {
+        ThreadPoolExecutor threadPoolforJms = new ThreadPoolExecutor(
+                Integer.valueOf(
+                        ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "thread.pool.corePoolSize")),
+                Integer.valueOf(
+                        ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "thread.pool.maximumPoolSize")),
+                Long.valueOf(
+                        ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "thread.pool.keepAliveTime")),
+                TimeUnit.MINUTES,
+                new LinkedBlockingQueue<Runnable>(Integer.valueOf(
+                        ConfigFileUtils.getPropertyValue(ConstantBasic.CONFIG_FILE[0], "thread.pool.workQueue"))),
+                new DaemonThreadFactory(""), new CallerRunsPolicy());
+
+        return threadPoolforJms;
     }
 }
