@@ -52,5 +52,6 @@
 		<module>ear</module>
 		<module>restclient</module>
 		<module>domain</module>
+		<module>wsdlclient</module>
 	</modules>
 </project>

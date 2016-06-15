@@ -11,7 +11,9 @@ import javax.net.ssl.SSLContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -108,7 +110,7 @@ public class JSONHttpClient {
      * Set protocol and hostname verifier
      * @return
      */
-    public static SSLConnectionSocketFactory buildSSLFactory() {
+    private static SSLConnectionSocketFactory buildSSLFactory() {
         try (// load truststore
                 FileInputStream instream = new FileInputStream(
                         new File(KEYSTORE_PATH));) {
@@ -131,7 +133,7 @@ public class JSONHttpClient {
         return null;
     }
 
-    public static CloseableHttpClient getHttpClient() throws Exception {
+    private static CloseableHttpClient getHttpClient() throws Exception {
         CloseableHttpClient httpClient = HttpClients.custom()
                 .setConnectionManager(pccm)
                 .setDefaultRequestConfig(defaultRequestConfig)
@@ -139,13 +141,33 @@ public class JSONHttpClient {
         return httpClient;
     }
 
+    private static HttpResponseDTO parseHttpResponse(CloseableHttpResponse response) {
+        int statusCode = response.getStatusLine().getStatusCode();
+
+        StringBuffer sbf = new StringBuffer("");
+        try (BufferedReader br = new 
+                BufferedReader(new 
+                        InputStreamReader(response.getEntity().getContent()))) {
+
+            String strTemp = null;
+            while ((strTemp = br.readLine()) != null) {
+                sbf.append(strTemp);
+            }
+        } catch (Exception e) {
+            logger.error("parse response body fail", e);
+        }
+
+        return 
+                new HttpResponseDTO(String.valueOf(statusCode), sbf.toString());
+    }
+    
     /**
-     * post rest
+     * POST rest
      * @param url full rest url
      * @param json request body
      * @return
      */
-    public static HttpResponseDTO postRequest (String url, String json) {
+    public static HttpResponseDTO requestPOST(String url, String json) {
         CloseableHttpClient httpClient = null;
         // do not close response using response.close, it will close automaticly
         CloseableHttpResponse response = null;
@@ -167,24 +189,59 @@ public class JSONHttpClient {
         } catch (Exception e) {
             logger.error("error occurs when post reuqest for {}", url, e);
         }
-
-        int statusCode = response.getStatusLine().getStatusCode();
-
-        StringBuffer sbf = new StringBuffer("");
-        try (BufferedReader br = new 
-                BufferedReader(new 
-                        InputStreamReader(response.getEntity().getContent()))) {
-
-            String strTemp = null;
-            while ((strTemp = br.readLine()) != null) {
-                sbf.append(strTemp);
-            }
-        } catch (Exception e) {
-            logger.error("parse response body fail", e);
-        }
-
-        return 
-                new HttpResponseDTO(String.valueOf(statusCode), sbf.toString());
+        return parseHttpResponse(response);
     }
     
+    /**
+     * GET rest
+     * @param url
+     * @return
+     */
+    public static HttpResponseDTO requestGET(String url) {
+        CloseableHttpClient httpClient = null;
+        // do not close response using response.close, it will close automaticly
+        CloseableHttpResponse response = null;
+        try {
+            HttpGet get = new HttpGet(URL + url);
+
+            get.addHeader("Accept", MediaType.APPLICATION_JSON_VALUE);
+            get.addHeader("Accept-Charset", ConstantBasic.DEFAULT_ENCODING);
+
+            httpClient = getHttpClient();
+            response = httpClient.execute(get);
+        } catch (Exception e) {
+            logger.error("error occurs when get reuqest for {}", url, e);
+        }
+        return parseHttpResponse(response);
+    }
+
+    /**
+     * PUT rest
+     * @param url
+     * @return
+     */
+    public static HttpResponseDTO requestPUT(String url, String json) {
+        CloseableHttpClient httpClient = null;
+        // do not close response using response.close, it will close automaticly
+        CloseableHttpResponse response = null;
+        try {
+            HttpPut put = new HttpPut(URL + url);
+            if (StringUtils.isNotBlank(json)) {
+                StringEntity requestEntity = new StringEntity(json, 
+                        ConstantBasic.DEFAULT_ENCODING);
+                requestEntity.setContentType(
+                        MediaType.APPLICATION_JSON_UTF8_VALUE);
+                put.setEntity(requestEntity);
+            }
+
+            put.addHeader("Accept", MediaType.APPLICATION_JSON_VALUE);
+            put.addHeader("Accept-Charset", ConstantBasic.DEFAULT_ENCODING);
+
+            httpClient = getHttpClient();
+            response = httpClient.execute(put);
+        } catch (Exception e) {
+            logger.error("error occurs when put reuqest for {}", url, e);
+        }
+        return parseHttpResponse(response);
+    }
 }
