@@ -15,5 +15,11 @@
         <artifactId>configs</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </dependency>
+    
+    <dependency>
+        <groupId>cn.gy.test</groupId>
+        <artifactId>domain</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>

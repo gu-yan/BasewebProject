@@ -51,5 +51,6 @@
 		<module>web</module>
 		<module>ear</module>
 		<module>restclient</module>
+		<module>domain</module>
 	</modules>
 </project>

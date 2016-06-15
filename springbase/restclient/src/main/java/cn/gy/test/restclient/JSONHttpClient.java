@@ -1,7 +1,9 @@
 package cn.gy.test.restclient;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.security.KeyStore;
 
 import javax.net.ssl.SSLContext;
@@ -26,11 +28,12 @@ import org.springframework.http.MediaType;
 
 import cn.gy.test.configs.constants.ConstantBasic;
 import cn.gy.test.configs.fileutil.ConfigFileUtils;
+import cn.gy.test.domains.dto.HttpResponseDTO;
 
 /**
  * rest client,just support json format<br>
  * support http and https protocol
- * 
+ * <br>
  * @author guyan
  *
  */
@@ -79,26 +82,7 @@ public class JSONHttpClient {
 
     static {
         if (pccm == null) {
-            SSLConnectionSocketFactory sslsf = null;
-            try (// 加载证书文件
-                    FileInputStream instream = new FileInputStream(
-                            new File(KEYSTORE_PATH));) {
-                KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-                trustStore.load(instream, KEYSTORE_PASS.toCharArray());
-                
-                SSLContext sslcontext = SSLContexts.custom()
-                        .loadTrustMaterial(trustStore)
-                        .build();
-                sslsf = new SSLConnectionSocketFactory(sslcontext,
-                        SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
-                /*
-                 * sslsf = new SSLConnectionSocketFactory( sslcontext, new
-                 * String[]{"SSLv3"}, new String[]{"SSL"},
-                 * SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
-                 */
-            } catch (Exception e) {
-                logger.error("Fail to load keystore", e);
-            }
+            SSLConnectionSocketFactory sslsf = buildSSLFactory();
 
             defaultRequestConfig = RequestConfig.custom()
                     .setSocketTimeout(SOCKET_TIMEOUT)
@@ -118,6 +102,34 @@ public class JSONHttpClient {
 
         }
     }
+    
+    /**
+     * Build SSLConnectionSocketFactory by keystore file.
+     * Set protocol and hostname verifier
+     * @return
+     */
+    public static SSLConnectionSocketFactory buildSSLFactory() {
+        try (// load truststore
+                FileInputStream instream = new FileInputStream(
+                        new File(KEYSTORE_PATH));) {
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            trustStore.load(instream, KEYSTORE_PASS.toCharArray());
+            
+            SSLContext sslcontext = SSLContexts.custom()
+                    .loadTrustMaterial(trustStore)
+                    .build();
+            return new SSLConnectionSocketFactory(sslcontext,
+                    SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+            /*
+             * sslsf = new SSLConnectionSocketFactory( sslcontext, new
+             * String[]{"SSLv3"}, new String[]{"SSL"},
+             * SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+             */
+        } catch (Exception e) {
+            logger.error("Fail to load keystore", e);
+        }
+        return null;
+    }
 
     public static CloseableHttpClient getHttpClient() throws Exception {
         CloseableHttpClient httpClient = HttpClients.custom()
@@ -127,30 +139,52 @@ public class JSONHttpClient {
         return httpClient;
     }
 
-    public static int httpMigRequest(String url, String json) {
+    /**
+     * post rest
+     * @param url full rest url
+     * @param json request body
+     * @return
+     */
+    public static HttpResponseDTO postRequest (String url, String json) {
         CloseableHttpClient httpClient = null;
-        //do not close response using response.close, it will close automaticly
+        // do not close response using response.close, it will close automaticly
         CloseableHttpResponse response = null;
         try {
             HttpPost post = new HttpPost(URL + url);
             if (StringUtils.isNotBlank(json)) {
-                StringEntity requestEntity = new StringEntity(json, ConstantBasic.DEFAULT_ENCODING);
-                requestEntity.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+                StringEntity requestEntity = new StringEntity(json, 
+                        ConstantBasic.DEFAULT_ENCODING);
+                requestEntity.setContentType(
+                        MediaType.APPLICATION_JSON_UTF8_VALUE);
                 post.setEntity(requestEntity);
-                
-                post.addHeader("Accept", MediaType.APPLICATION_JSON_VALUE);
-                post.addHeader("Accept-Charset", ConstantBasic.DEFAULT_ENCODING);
-            } else {
-                return -1;
             }
+
+            post.addHeader("Accept", MediaType.APPLICATION_JSON_VALUE);
+            post.addHeader("Accept-Charset", ConstantBasic.DEFAULT_ENCODING);
+
             httpClient = getHttpClient();
             response = httpClient.execute(post);
-            //TODO verity response
-            int statusCode = response.getStatusLine().getStatusCode();
-            return statusCode;
         } catch (Exception e) {
             logger.error("error occurs when post reuqest for {}", url, e);
         }
-        return -1;
+
+        int statusCode = response.getStatusLine().getStatusCode();
+
+        StringBuffer sbf = new StringBuffer("");
+        try (BufferedReader br = new 
+                BufferedReader(new 
+                        InputStreamReader(response.getEntity().getContent()))) {
+
+            String strTemp = null;
+            while ((strTemp = br.readLine()) != null) {
+                sbf.append(strTemp);
+            }
+        } catch (Exception e) {
+            logger.error("parse response body fail", e);
+        }
+
+        return 
+                new HttpResponseDTO(String.valueOf(statusCode), sbf.toString());
     }
+    
 }
