@@ -1,5 +1,5 @@
 # BasewebProject
-This is a based web project using SpringMVC and anyone can build your own web project based on it.
+This is a web project using SpringMVC framework, it provides the basic web functions.You can build your own project based on it.
 
 ## Development
 
