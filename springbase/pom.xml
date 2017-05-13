@@ -53,5 +53,6 @@
 		<module>restclient</module>
 		<module>domain</module>
 		<module>wsdlclient</module>
-	</modules>
+        <module>cache</module>
+    </modules>
 </project>
